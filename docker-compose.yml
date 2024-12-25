@@ -85,6 +85,25 @@ services:
       graph-db:
         condition: service_healthy
 
+  plumhound:
+    image: docker.io/python:3.9-slim
+    volumes:
+      - ./plumhound:/app
+      - ./reports:/reports
+    networks:
+      - default
+    working_dir: /app
+    command: >
+      bash -c "pip install plumhound &&
+      python3 -m plumhound 
+      -s bolt://graph-db:7687 
+      -u ${NEO4J_USER:-neo4j} 
+      -p ${NEO4J_SECRET:-bloodhoundcommunityedition}
+      -x /app/tasks/default.tasks
+      -o /reports"
+    depends_on:
+      - graph-db
+
 volumes:
   neo4j-data:
   postgres-data:
