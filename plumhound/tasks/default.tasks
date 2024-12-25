@@ -1,0 +1,22 @@
+{
+    "tasks": [
+        {
+            "name": "RiskAssessment",
+            "title": "Active Directory Risk Assessment",
+            "tasks": [
+                {
+                    "name": "HighValueTargets",
+                    "title": "High Value Targets Analysis",
+                    "query": "MATCH (n) WHERE n.highvalue=true RETURN n.name as Asset, labels(n) as Type",
+                    "type": "html"
+                },
+                {
+                    "name": "ShortestPaths",
+                    "title": "Critical Access Paths",
+                    "query": "MATCH p=shortestPath((u:User)-[*1..3]->(t {highvalue:true})) RETURN u.name as User, t.name as Target, length(p) as Distance",
+                    "type": "html"
+                }
+            ]
+        }
+    ]
+}
